@@ -1,0 +1,15 @@
+name: app_workflow
+on: push
+
+workflow_dispatch:
+
+jobs:
+  build-container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: dev-ops
+
+      - name: build Docker image
+        working directory: dev-ops
+        run: docker build . --file Dockerfile --tag go-app:$(date +%s)
+
