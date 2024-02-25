@@ -3,8 +3,8 @@ provider "dockerhub" {
   password = var.password
 }
 
-resource "dockerhub_repository" "nbx" {
+resource "dockerhub_repository" "repository" {
   name        = var.name
-  namespace   = "taraav1"
+  namespace   = var.username
   description = "exam"
 }
