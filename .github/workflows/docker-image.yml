@@ -5,15 +5,22 @@ on:
     branches: 'main'
 
 jobs:
-
-  build:
-
+  push_to_registery:
+    name: Push img to Docker Hub
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag go-image:$(date +%s)
-    - name: Push the Docker image to Docker Hub
-      run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/nbx:latest
+      - name: Check out repo
+        uses: actions/checkout@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          token: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push img
+        uses: docker/build-push-action@v4
+        with: 
+          context: DockerFile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/nbx:latest
