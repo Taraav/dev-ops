@@ -3,16 +3,26 @@ name: Docker Image CI
 on:
   push:
     branches: '*'
-  pull_request:
-    branches: '*'
 
 jobs:
-
-  build:
-
+  push_to_registery:
+    name: Push img to Docker Hub
     runs-on: ubuntu-latest
-
+    env:
+      TIMESTAMP: ${{ github.run_id }}
     steps:
-    - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag go-image:$(date +%s)
+      - name: Check out repo
+        uses: actions/checkout@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build img
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/nbx:${{ env.TIMESTAMP }} .
+
+      - name: Push img to Docker Hub
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/nbx:${{ env.TIMESTAMP }}
