@@ -8,6 +8,8 @@ jobs:
   push_to_registery:
     name: Push img to Docker Hub
     runs-on: ubuntu-latest
+    env:
+      TIMESTAMP: ${{ github.run_id }}
     steps:
       - name: Check out repo
         uses: actions/checkout@v3
@@ -19,8 +21,8 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build img
-        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/nbx:$(date +%s) .
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/nbx:${{ env.TIMESTAMP }} .
 
       - name: Push img to Docker Hub
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/nbx:$(date +%s)
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/nbx:${{ env.TIMESTAMP }}
