@@ -4,7 +4,7 @@ provider "dockerhub" {
 }
 
 resource "dockerhub_repository" "nbx" {
-  name        = "nbx"
+  name        = var.name
   namespace   = "taraav1"
   description = "exam"
 }
