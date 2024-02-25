@@ -19,9 +19,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build img
-        uses: docker/build-push-action@v4
-        with: 
-          push: false 
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/nbx:latest .
 
       - name: Push img to Docker Hub
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
