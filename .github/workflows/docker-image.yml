@@ -2,9 +2,7 @@ name: Docker Image CI
 
 on:
   push:
-    branches: '*'
-  pull_request:
-    branches: '*'
+    branches: 'main'
 
 jobs:
 
@@ -16,3 +14,7 @@ jobs:
     - uses: actions/checkout@v3
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag go-image:$(date +%s)
+          docker tag go-image:$(date +%s) ${{ secrets.DOCKERHUB_USERNAME }}/nbx:latest
+    - name: Push the Docker image to Docker Hub
+      run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/nbx:latest
