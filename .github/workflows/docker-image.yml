@@ -21,6 +21,5 @@ jobs:
       - name: Build and push img
         uses: docker/build-push-action@v4
         with: 
-          context: dev-ops/
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/nbx:latest
